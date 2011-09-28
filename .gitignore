@@ -1,4 +1,5 @@
 *.o
+*.swp
 Makefile
 config.h
 config.log

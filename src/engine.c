@@ -120,7 +120,7 @@ void
 ibus_array_init (IBusBus *bus) 
 {
     GVariant * res;
-    GValue value = { 0, };
+    gsize res_str_len;
 
     array_context = array_create_context();
 
@@ -132,7 +132,7 @@ ibus_array_init (IBusBus *bus)
     res = ibus_config_get_value (config, "engine/Array", 
                                 "SpecialNotify");
     if (res != NULL) {
-        const gchar* str = g_value_get_string(&value);
+        const gchar* str = g_variant_get_string(res, &res_str_len);
         if (g_strcmp0(str, "1") == 0)
             is_special_notify = TRUE;
     }
@@ -140,7 +140,7 @@ ibus_array_init (IBusBus *bus)
     res = ibus_config_get_value (config, "engine/Array", 
                                 "SpecialOnly");
     if (res != NULL) {
-        const gchar* str = g_value_get_string(&value);
+        const gchar* str = g_variant_get_string(res, &res_str_len);
         if (g_strcmp0(str, "1") == 0)
             is_special_only = TRUE;
     }
