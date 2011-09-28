@@ -119,7 +119,7 @@ ibus_array_engine_get_type (void)
 void 
 ibus_array_init (IBusBus *bus) 
 {
-    gboolean res;
+    GVariant * res;
     GValue value = { 0, };
 
     array_context = array_create_context();
@@ -130,16 +130,16 @@ ibus_array_init (IBusBus *bus)
     is_special_only = FALSE;
 
     res = ibus_config_get_value (config, "engine/Array", 
-                                "SpecialNotify", &value);
-    if (res) {
+                                "SpecialNotify");
+    if (res != NULL) {
         const gchar* str = g_value_get_string(&value);
         if (g_strcmp0(str, "1") == 0)
             is_special_notify = TRUE;
     }
 
     res = ibus_config_get_value (config, "engine/Array", 
-                                "SpecialOnly", &value);
-    if (res) {
+                                "SpecialOnly");
+    if (res != NULL) {
         const gchar* str = g_value_get_string(&value);
         if (g_strcmp0(str, "1") == 0)
             is_special_only = TRUE;
