@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 26
+/svn/!svn/ver/16/trunk/src
+END
+array.c
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/14/trunk/src/array.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/16/trunk/src/Makefile.in
+END
+array.h
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/14/trunk/src/array.h
+END
+main.c
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/5/trunk/src/main.c
+END
+sqlite3.c
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/src/sqlite3.c
+END
+engine.c
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/16/trunk/src/engine.c
+END
+array.xml.in.in
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/src/array.xml.in.in
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/13/trunk/src/Makefile.am
+END
+sqlite3.h
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/src/sqlite3.h
+END
+engine.h
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/2/trunk/src/engine.h
+END
