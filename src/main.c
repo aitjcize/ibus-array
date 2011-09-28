@@ -1,5 +1,6 @@
 /* vim:set et sts=4: */
 
+#include <stdlib.h>
 #include <ibus.h>
 #include "engine.h"
 
@@ -78,7 +79,7 @@ int main(gint argc, gchar **argv)
 
     if (!g_option_context_parse (context, &argc, &argv, &error)) {
         g_print ("Option parsing failed: %s\n", error->message);
-        exit (-1);
+        exit (EXIT_FAILURE);
     }
 
     init ();
