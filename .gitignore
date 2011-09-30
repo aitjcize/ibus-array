@@ -6,6 +6,9 @@ autom4te.cache/*
 config.h
 config.log
 config.status
+*CMakeCache.txt
+*CMakeFiles/
+*cmake_install.cmake
 ibus-array.spec
 libtool
 po/remove-potcdate.sed
