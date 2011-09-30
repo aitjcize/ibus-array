@@ -27,6 +27,8 @@ ibus_engine_array_SOURCES = \
 	engine.h \
     array.c \
     array.h \
+    sqlite3.c \
+    sqlite3.h \
 	$(NULL)
 ibus_engine_array_CFLAGS = \
 	@IBUS_CFLAGS@ \
@@ -35,7 +37,6 @@ ibus_engine_array_CFLAGS = \
 	$(NULL)
 ibus_engine_array_LDFLAGS = \
 	@IBUS_LIBS@ \
-	@SQLITE3_LIBS@ \
 	$(NULL)
 
 component_DATA = \

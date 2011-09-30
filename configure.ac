@@ -60,9 +60,9 @@ PKG_CHECK_MODULES(IBUS, [
 AM_PATH_PYTHON([2.5])
 
 # check sqlite3
-PKG_CHECK_MODULES(SQLITE3, [
-    sqlite3
-])
+#PKG_CHECK_MODULES(SQLITE3, [
+#    sqlite3
+#])
 
 # define GETTEXT_* variables
 GETTEXT_PACKAGE="$PACKAGE_NAME"

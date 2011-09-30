@@ -79,7 +79,8 @@ am__installdirs = "$(DESTDIR)$(libexecdir)" \
 PROGRAMS = $(libexec_PROGRAMS)
 am_ibus_engine_array_OBJECTS = ibus_engine_array-main.$(OBJEXT) \
 	ibus_engine_array-engine.$(OBJEXT) \
-	ibus_engine_array-array.$(OBJEXT)
+	ibus_engine_array-array.$(OBJEXT) \
+	ibus_engine_array-sqlite3.$(OBJEXT)
 ibus_engine_array_OBJECTS = $(am_ibus_engine_array_OBJECTS)
 ibus_engine_array_LDADD = $(LDADD)
 ibus_engine_array_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -218,8 +219,6 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
-SQLITE3_CFLAGS = @SQLITE3_CFLAGS@
-SQLITE3_LIBS = @SQLITE3_LIBS@
 STRIP = @STRIP@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
@@ -288,6 +287,8 @@ ibus_engine_array_SOURCES = \
 	engine.h \
     array.c \
     array.h \
+    sqlite3.c \
+    sqlite3.h \
 	$(NULL)
 
 ibus_engine_array_CFLAGS = \
@@ -298,7 +299,6 @@ ibus_engine_array_CFLAGS = \
 
 ibus_engine_array_LDFLAGS = \
 	@IBUS_LIBS@ \
-	@SQLITE3_LIBS@ \
 	$(NULL)
 
 component_DATA = \
@@ -406,6 +406,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ibus_engine_array-array.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ibus_engine_array-engine.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ibus_engine_array-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ibus_engine_array-sqlite3.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -469,6 +470,20 @@ ibus_engine_array-array.obj: array.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='array.c' object='ibus_engine_array-array.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ibus_engine_array_CFLAGS) $(CFLAGS) -c -o ibus_engine_array-array.obj `if test -f 'array.c'; then $(CYGPATH_W) 'array.c'; else $(CYGPATH_W) '$(srcdir)/array.c'; fi`
+
+ibus_engine_array-sqlite3.o: sqlite3.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ibus_engine_array_CFLAGS) $(CFLAGS) -MT ibus_engine_array-sqlite3.o -MD -MP -MF $(DEPDIR)/ibus_engine_array-sqlite3.Tpo -c -o ibus_engine_array-sqlite3.o `test -f 'sqlite3.c' || echo '$(srcdir)/'`sqlite3.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ibus_engine_array-sqlite3.Tpo $(DEPDIR)/ibus_engine_array-sqlite3.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sqlite3.c' object='ibus_engine_array-sqlite3.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ibus_engine_array_CFLAGS) $(CFLAGS) -c -o ibus_engine_array-sqlite3.o `test -f 'sqlite3.c' || echo '$(srcdir)/'`sqlite3.c
+
+ibus_engine_array-sqlite3.obj: sqlite3.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ibus_engine_array_CFLAGS) $(CFLAGS) -MT ibus_engine_array-sqlite3.obj -MD -MP -MF $(DEPDIR)/ibus_engine_array-sqlite3.Tpo -c -o ibus_engine_array-sqlite3.obj `if test -f 'sqlite3.c'; then $(CYGPATH_W) 'sqlite3.c'; else $(CYGPATH_W) '$(srcdir)/sqlite3.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ibus_engine_array-sqlite3.Tpo $(DEPDIR)/ibus_engine_array-sqlite3.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sqlite3.c' object='ibus_engine_array-sqlite3.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ibus_engine_array_CFLAGS) $(CFLAGS) -c -o ibus_engine_array-sqlite3.obj `if test -f 'sqlite3.c'; then $(CYGPATH_W) 'sqlite3.c'; else $(CYGPATH_W) '$(srcdir)/sqlite3.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
