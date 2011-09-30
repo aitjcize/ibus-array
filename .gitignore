@@ -8,6 +8,7 @@ config.log
 config.status
 ibus-array.spec
 libtool
+po/remove-potcdate.sed
 setup/config.py
 setup/ibus-setup-array
 src/.deps/
