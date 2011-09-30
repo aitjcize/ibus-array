@@ -1,7 +1,7 @@
 #ifndef _ARRAY_HEADER_
 #define _ARRAY_HEADER_
 
-#include "sqlite3.h"
+#include <sqlite3.h>
 #include <glib.h>
 
 typedef struct _ArrayContext {
