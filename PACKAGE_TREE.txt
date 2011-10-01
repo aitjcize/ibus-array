@@ -1,0 +1,22 @@
+.
+└── usr
+    ├── libexec
+    │   ├── ibus-engine-array
+    │   └── ibus-setup-array
+    └── share
+        ├── ibus
+        │   └── component
+        │       └── array.xml
+        └── ibus-array
+            ├── icons
+            │   └── ibus-array.png
+            ├── setup
+            │   ├── config.py
+            │   ├── config.pyc
+            │   ├── config.pyo
+            │   ├── main.py
+            │   ├── main.pyc
+            │   └── main.pyo
+            └── tables
+                └── array.db
+
