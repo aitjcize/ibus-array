@@ -9,7 +9,7 @@ typedef struct _IBusArrayEngine IBusArrayEngine;
 typedef struct _IBusArrayEngineClass IBusArrayEngineClass;
 
 struct _IBusArrayEngine {
-	IBusEngine parent;
+    IBusEngine parent;
 
     /* members */
     GString *preedit;
@@ -18,6 +18,8 @@ struct _IBusArrayEngine {
 
     IBusLookupTable *table;
     IBusPropList *prop_list;
+    gboolean mode; /* 0 for Array, 1 for english */
+    gboolean prev_keyval;
 };
 
 struct _IBusArrayEngineClass {
@@ -188,6 +190,8 @@ ibus_array_engine_init (IBusArrayEngine *arrayeng)
     arrayeng->preedit = g_string_new ("");
     arrayeng->cursor_pos = 0;
     arrayeng->space_press_count = 0;
+    arrayeng->mode = 0;
+    arrayeng->prev_keyval = 0;
 
     arrayeng->table = ibus_lookup_table_new (10, 0, FALSE, TRUE);
     g_object_ref_sink(arrayeng->table);
@@ -457,125 +461,144 @@ ibus_array_engine_process_key_event (IBusEngine *engine,
     IBusText *text;
     IBusArrayEngine *arrayeng = (IBusArrayEngine *)engine;
 
-    if (modifiers & IBUS_RELEASE_MASK)
-        return FALSE;
-
     //modifiers &= (IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
 
     /*if (modifiers == IBUS_CONTROL_MASK && keyval == IBUS_s) {
-        ibus_array_engine_update_lookup_table (arrayeng);
-        return TRUE;
-    }*/
+      ibus_array_engine_update_lookup_table (arrayeng);
+      return TRUE;
+      }*/
 
     /*if (modifiers != 0) {
-        if (arrayeng->preedit->len == 0)
-            return FALSE;
-        else
-            return TRUE;
-    }*/
+      if (arrayeng->preedit->len == 0)
+      return FALSE;
+      else
+      return TRUE;
+      }*/
 
-    if (keyval == IBUS_Shift_L || keyval == IBUS_Shift_R)
+    if (modifiers & IBUS_RELEASE_MASK) {
+        if (keyval == arrayeng->prev_keyval == IBUS_Shift_L) {
+            arrayeng->mode = !arrayeng->mode;
+            ibus_array_engine_reset((IBusEngine*)arrayeng);
+            return TRUE;
+        }
         return FALSE;
+    }
+
+    arrayeng->prev_keyval = keyval;
 
     if (modifiers & (IBUS_CONTROL_MASK | IBUS_MOD1_MASK))
         return FALSE;
 
+    if (arrayeng->mode == 0) {
+        switch (keyval) {
+            case IBUS_space:
+                //g_string_append (arrayeng->preedit, " ");
+                if (arrayeng->preedit->len == 0)
+                    return FALSE;
+                ibus_array_engine_space_press(arrayeng);
+                return TRUE;
+                //return ibus_array_engine_commit_preedit (arrayeng);
+            case IBUS_Return:
+                if (arrayeng->preedit->len == 0)
+                    return FALSE;
+                else
+                    return TRUE;
+                //return ibus_array_engine_commit_preedit (arrayeng);
 
-    switch (keyval) {
-    case IBUS_space:
-        //g_string_append (arrayeng->preedit, " ");
-        if (arrayeng->preedit->len == 0)
-            return FALSE;
-        ibus_array_engine_space_press(arrayeng);
-        return TRUE;
-        //return ibus_array_engine_commit_preedit (arrayeng);
-    case IBUS_Return:
-        if (arrayeng->preedit->len == 0)
-            return FALSE;
-        else
-            return TRUE;
-        //return ibus_array_engine_commit_preedit (arrayeng);
+            case IBUS_Escape:
+                /*if (arrayeng->preedit->len == 0)
+                  return FALSE;*/
+                ibus_array_engine_reset((IBusEngine*)arrayeng);
+                return TRUE;
 
-    case IBUS_Escape:
-        /*if (arrayeng->preedit->len == 0)
-            return FALSE;*/
-        ibus_array_engine_reset((IBusEngine*)arrayeng);
-        return TRUE;        
+            case IBUS_Left:
+            case IBUS_Up:
+            case IBUS_Page_Up:
+                if (arrayeng->preedit->len == 0)
+                    return FALSE;
+                ibus_lookup_table_page_up (arrayeng->table);
+                ibus_engine_update_lookup_table ((IBusEngine *) arrayeng, arrayeng->table, TRUE);
+                return TRUE;
 
-    case IBUS_Left:
-    case IBUS_Up:
-    case IBUS_Page_Up:
-        if (arrayeng->preedit->len == 0)
-            return FALSE;
-        ibus_lookup_table_page_up (arrayeng->table);
-        ibus_engine_update_lookup_table ((IBusEngine *) arrayeng, arrayeng->table, TRUE);
-        return TRUE;
+            case IBUS_Right:
+            case IBUS_Down:
+            case IBUS_Page_Down:
+                if (arrayeng->preedit->len == 0)
+                    return FALSE;
+                ibus_lookup_table_page_down (arrayeng->table);
+                ibus_engine_update_lookup_table ((IBusEngine *) arrayeng, arrayeng->table, TRUE);
+                return TRUE;
+                /*if (arrayeng->cursor_pos < arrayeng->preedit->len) {
+                  arrayeng->cursor_pos ++;
+                  ibus_array_engine_update (arrayeng);
+                  }
+                  return TRUE;*/
 
-    case IBUS_Right:
-    case IBUS_Down:
-    case IBUS_Page_Down:
-        if (arrayeng->preedit->len == 0)
-            return FALSE;
-        ibus_lookup_table_page_down (arrayeng->table);
-        ibus_engine_update_lookup_table ((IBusEngine *) arrayeng, arrayeng->table, TRUE);
-        return TRUE;
-        /*if (arrayeng->cursor_pos < arrayeng->preedit->len) {
-            arrayeng->cursor_pos ++;
-            ibus_array_engine_update (arrayeng);
+
+            case IBUS_BackSpace:
+            case IBUS_Delete:
+                if (arrayeng->preedit->len == 0)
+                    return FALSE;
+                if (arrayeng->cursor_pos > 0) {
+                    arrayeng->cursor_pos --;
+                    g_string_erase (arrayeng->preedit, arrayeng->cursor_pos, 1);
+                    ibus_array_engine_update (arrayeng);
+                }
+                return TRUE; 
         }
-        return TRUE;*/
-    
 
-    case IBUS_BackSpace:
-    case IBUS_Delete:
-        if (arrayeng->preedit->len == 0)
-            return FALSE;
-        if (arrayeng->cursor_pos > 0) {
-            arrayeng->cursor_pos --;
-            g_string_erase (arrayeng->preedit, arrayeng->cursor_pos, 1);
-            ibus_array_engine_update (arrayeng);
-        }
-        return TRUE; 
-    }
-
-    if (arrayeng->preedit->len > 0 && (keyval >= IBUS_0 && keyval <= IBUS_9)) {
-        if (g_strcmp0(arrayeng->preedit->str, "w") == 0) {
-            g_string_insert_c (arrayeng->preedit,
-                               arrayeng->cursor_pos,
-                               keyval);
-            arrayeng->cursor_pos ++;
-            ibus_array_engine_update_symbol_lookup_table (arrayeng);
-            return TRUE;
-        }
-        return ibus_array_engine_process_candidate_key_event(arrayeng, keyval, modifiers);
-    }
-
-
-    if (is_alpha (keyval) || keyval == IBUS_period || keyval == IBUS_comma || keyval == IBUS_slash || keyval == IBUS_semicolon) {
-
-        if (arrayeng->space_press_count == 1) {
-            if (arrayeng->table->candidates->len > 0) {
-                gboolean commit_rev;
-
-                ibus_lookup_table_set_cursor_pos (arrayeng->table, 0);
-
-                commit_rev = ibus_array_engine_commit_current_candidate(arrayeng);
-
-                /*if (commit_rev)
-                    ibus_array_engine_reset((IBusEngine*)arrayeng);*/
+        if (arrayeng->preedit->len > 0 && (keyval >= IBUS_0 && keyval <= IBUS_9)) {
+            if (g_strcmp0(arrayeng->preedit->str, "w") == 0) {
+                g_string_insert_c (arrayeng->preedit,
+                        arrayeng->cursor_pos,
+                        keyval);
+                arrayeng->cursor_pos ++;
+                ibus_array_engine_update_symbol_lookup_table (arrayeng);
+                return TRUE;
             }
+            return ibus_array_engine_process_candidate_key_event(arrayeng, keyval, modifiers);
         }
-	if (arrayeng->preedit->len >= 5) {
-	    return TRUE;
-	}
 
-        g_string_insert_c (arrayeng->preedit,
-                           arrayeng->cursor_pos,
-                           keyval);
 
-        arrayeng->cursor_pos ++;
-        ibus_array_engine_update (arrayeng);
-        
+        if (is_alpha (keyval) || keyval == IBUS_period || keyval == IBUS_comma || keyval == IBUS_slash || keyval == IBUS_semicolon) {
+
+            if (arrayeng->space_press_count == 1) {
+                if (arrayeng->table->candidates->len > 0) {
+                    gboolean commit_rev;
+
+                    ibus_lookup_table_set_cursor_pos (arrayeng->table, 0);
+
+                    commit_rev = ibus_array_engine_commit_current_candidate(arrayeng);
+
+                    /*if (commit_rev)
+                      ibus_array_engine_reset((IBusEngine*)arrayeng);*/
+                }
+            }
+            if (arrayeng->preedit->len >= 5) {
+                return TRUE;
+            }
+
+            g_string_insert_c (arrayeng->preedit,
+                    arrayeng->cursor_pos,
+                    keyval);
+
+            arrayeng->cursor_pos ++;
+            ibus_array_engine_update (arrayeng);
+
+            return TRUE;
+        }
+    } else {
+        if (keyval >= 128) {
+            return FALSE;
+        }
+
+        gchar string[2] = { 0 };
+        string[0] = keyval;
+        IBusText* text = ibus_text_new_from_static_string (string);
+
+        ibus_array_engine_reset((IBusEngine*)arrayeng);
+        ibus_engine_commit_text((IBusEngine*)arrayeng, text);
+
         return TRUE;
     }
 
