@@ -476,7 +476,8 @@ ibus_array_engine_process_key_event (IBusEngine *engine,
       }*/
 
     if (modifiers & IBUS_RELEASE_MASK) {
-        if (keyval == IBUS_Shift_L && arrayeng->prev_keyval == keyval) {
+        if ((keyval == IBUS_Shift_L || keyval == IBUS_Shift_R)
+	  && arrayeng->prev_keyval == keyval) {
             arrayeng->mode = !arrayeng->mode;
             ibus_array_engine_reset((IBusEngine*)arrayeng);
             return TRUE;
